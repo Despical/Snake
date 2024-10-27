@@ -23,105 +23,105 @@ import me.despical.snake.utils.Direction;
  */
 public class Game extends Application {
 
-	public static final int BOARD_HEIGHT = 400;
-	public static final int BOARD_WIDTH = 400;
-	public static final int TILE_SIZE = 100;
-	public static final long UPDATE_INTERVAL = 250_000_000;
-	public static final boolean WRAP_AROUND = true;
-	public static final boolean SHOW_SEGMENT_INDEXES = false;
+    public static final int BOARD_HEIGHT = 400;
+    public static final int BOARD_WIDTH = 400;
+    public static final int TILE_SIZE = 20;
+    public static final long UPDATE_INTERVAL = 250_000_000;
+    public static final boolean WRAP_AROUND = true;
+    public static final boolean SHOW_SEGMENT_INDEXES = false;
 
-	private boolean gameOver = false;
-	private boolean hasPressed = false;
+    private boolean gameOver = false;
+    private boolean hasPressed = false;
 
-	@Override
-	public void start(Stage primaryStage) {
-		Canvas canvas = new Canvas(BOARD_WIDTH, BOARD_HEIGHT);
-		GraphicsContext graphics = canvas.getGraphicsContext2D();
-		graphics.setTextAlign(TextAlignment.CENTER);
-		graphics.setTextBaseline(VPos.CENTER);
-		graphics.setFont(new Font("Arial", 40));
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-		StackPane root = new StackPane();
-		root.getChildren().add(canvas);
+    @Override
+    public void start(Stage primaryStage) {
+        Canvas canvas = new Canvas(BOARD_WIDTH, BOARD_HEIGHT);
+        GraphicsContext graphics = canvas.getGraphicsContext2D();
+        graphics.setTextAlign(TextAlignment.CENTER);
+        graphics.setTextBaseline(VPos.CENTER);
+        graphics.setFont(new Font("Arial", 40));
 
-		Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-		Snake snake = new Snake();
-		Apple apple = new Apple(snake);
+        StackPane root = new StackPane();
+        root.getChildren().add(canvas);
 
-		primaryStage.setTitle("Snake Game by Despical");
-		primaryStage.setResizable(false);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+        Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
+        Snake snake = new Snake();
+        Apple apple = new Apple(snake);
 
-		scene.setOnKeyPressed(event -> {
-			if (hasPressed) {
-				return;
-			}
+        primaryStage.setTitle("Snake Game by Despical");
+        primaryStage.setResizable(false);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
-			final KeyCode keyCode = event.getCode();
+        scene.setOnKeyPressed(event -> {
+            if (hasPressed) {
+                return;
+            }
 
-			switch (keyCode) {
-				case UP, DOWN, LEFT, RIGHT -> {
-					snake.setDirection(Direction.matchDirection(keyCode));
-					hasPressed = true;
-				}
-			}
-		});
+            final KeyCode keyCode = event.getCode();
 
-		AnimationTimer gameLoop = new AnimationTimer() {
+            switch (keyCode) {
+                case UP, DOWN, LEFT, RIGHT -> {
+                    snake.setDirection(Direction.matchDirection(keyCode));
+                    hasPressed = true;
+                }
+            }
+        });
 
-			private long lastUpdated = 0;
+        AnimationTimer gameLoop = new AnimationTimer() {
 
-			@Override
-			public void handle(long now) {
-				if (now - lastUpdated < UPDATE_INTERVAL) {
-					return;
-				}
+            private long lastUpdated = 0;
 
-				gameOver = snake.isGameOver();
+            @Override
+            public void handle(long now) {
+                if (now - lastUpdated < UPDATE_INTERVAL) {
+                    return;
+                }
 
-				if (gameOver) {
-					graphics.setFill(Color.RED);
-					graphics.fillText("Game Over", BOARD_WIDTH / 2D, BOARD_HEIGHT / 2D);
-					return;
-				}
+                gameOver = snake.isGameOver();
 
-				if (snake.hasCollectedAllApples()) {
-					graphics.setFill(Color.LIGHTBLUE);
-					graphics.fillText("You win!", BOARD_WIDTH / 2D, BOARD_HEIGHT / 2D);
-					return;
-				}
+                if (gameOver) {
+                    graphics.setFill(Color.RED);
+                    graphics.fillText("Game Over", BOARD_WIDTH / 2D, BOARD_HEIGHT / 2D);
+                    return;
+                }
 
-				lastUpdated = now;
+                if (snake.hasCollectedAllApples()) {
+                    graphics.setFill(Color.LIGHTBLUE);
+                    graphics.fillText("You win!", BOARD_WIDTH / 2D, BOARD_HEIGHT / 2D);
+                    return;
+                }
 
-				snake.updatePosition();
-				snake.draw(graphics);
-				apple.checkSnakePosition();
+                lastUpdated = now;
 
-				apple.draw(graphics);
+                snake.updatePosition();
+                snake.draw(graphics);
+                apple.checkSnakePosition();
 
-				drawGrid(graphics);
+                apple.draw(graphics);
 
-				hasPressed = false;
-			}
-		};
+                drawGrid(graphics);
 
-		gameLoop.start();
-	}
+                hasPressed = false;
+            }
+        };
 
-	private void drawGrid(GraphicsContext graphics) {
-		graphics.setStroke(Color.GRAY);
+        gameLoop.start();
+    }
 
-		for (int x = 0; x < BOARD_WIDTH; x += TILE_SIZE) {
-			graphics.strokeLine(x, 0, x, BOARD_HEIGHT);
-		}
+    private void drawGrid(GraphicsContext graphics) {
+        graphics.setStroke(Color.GRAY);
 
-		for (int y = 0; y < BOARD_HEIGHT; y += TILE_SIZE) {
-			graphics.strokeLine(0, y, BOARD_WIDTH, y);
-		}
-	}
+        for (int x = 0; x < BOARD_WIDTH; x += TILE_SIZE) {
+            graphics.strokeLine(x, 0, x, BOARD_HEIGHT);
+        }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+        for (int y = 0; y < BOARD_HEIGHT; y += TILE_SIZE) {
+            graphics.strokeLine(0, y, BOARD_WIDTH, y);
+        }
+    }
 }

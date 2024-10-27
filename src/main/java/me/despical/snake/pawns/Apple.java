@@ -3,6 +3,7 @@ package me.despical.snake.pawns;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import me.despical.snake.Game;
 
 /**
  * @author Despical
@@ -11,56 +12,56 @@ import javafx.scene.paint.Color;
  */
 public class Apple extends Pawn {
 
-	private Point2D origin;
-	private final Snake snake;
+    private final Snake snake;
+    private Point2D origin;
 
-	public Apple(Snake snake) {
-		this.snake = snake;
-		this.origin = this.findNewOrigin();
-	}
+    public Apple(Snake snake) {
+        this.snake = snake;
+        this.origin = this.findNewOrigin();
+    }
 
-	private Point2D findNewOrigin() {
-		while (true) {
-			Point2D point = new Point2D(random.nextInt(400 / tileSize) * tileSize, random.nextInt(400 / tileSize) * tileSize);
+    private Point2D findNewOrigin() {
+        while (true) {
+            Point2D point = new Point2D(random.nextInt(Game.BOARD_WIDTH / tileSize) * tileSize, random.nextInt(Game.BOARD_HEIGHT / tileSize) * tileSize);
 
-			if (isInsideSnake(point)) {
-				continue;
-			}
+            if (isInsideSnake(point)) {
+                continue;
+            }
 
-			return point;
-		}
-	}
+            return point;
+        }
+    }
 
-	private boolean isInsideSnake(Point2D point) {
-		double x = point.getX(), y = point.getY();
+    private boolean isInsideSnake(Point2D point) {
+        double x = point.getX(), y = point.getY();
 
-		for (Point2D segment : snake.getSegments()) {
-			double appleX = x / tileSize;
-			double appleY = y / tileSize;
+        for (Point2D segment : snake.getSegments()) {
+            double appleX = x / tileSize;
+            double appleY = y / tileSize;
 
-			double segmentX = segment.getX() / tileSize;
-			double segmentY = segment.getY() / tileSize;
+            double segmentX = segment.getX() / tileSize;
+            double segmentY = segment.getY() / tileSize;
 
-			if (Math.floor(appleX) == Math.floor(segmentX) && Math.floor(appleY) == Math.floor(segmentY)) {
-				return true;
-			}
-		}
+            if (Math.floor(appleX) == Math.floor(segmentX) && Math.floor(appleY) == Math.floor(segmentY)) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public void draw(GraphicsContext graphics) {
-		graphics.setFill(Color.RED);
-		graphics.fillOval(origin.getX(), origin.getY(), tileSize, tileSize);
-	}
+    @Override
+    public void draw(GraphicsContext graphics) {
+        graphics.setFill(Color.RED);
+        graphics.fillOval(origin.getX(), origin.getY(), tileSize, tileSize);
+    }
 
-	public void checkSnakePosition() {
-		Point2D headPos = snake.getSegments().get(0);
+    public void checkSnakePosition() {
+        Point2D headPos = snake.getSegments().get(0);
 
-		if (headPos.getX() == origin.getX() && headPos.getY() == origin.getY()) {
-			snake.grow();
-			origin = this.findNewOrigin();
-		}
-	}
+        if (headPos.getX() == origin.getX() && headPos.getY() == origin.getY()) {
+            snake.grow();
+            origin = this.findNewOrigin();
+        }
+    }
 }

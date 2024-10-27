@@ -12,10 +12,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public abstract class Pawn {
 
-	protected static final int tileSize = Game.TILE_SIZE;
-	protected static final int boardWidth = Game.BOARD_WIDTH;
-	protected static final int boardHeight = Game.BOARD_HEIGHT;
-	protected static final ThreadLocalRandom random = ThreadLocalRandom.current();
+    protected static final int tileSize = Game.TILE_SIZE;
+    protected static final int boardWidth = Game.BOARD_WIDTH;
+    protected static final int boardHeight = Game.BOARD_HEIGHT;
+    protected static final ThreadLocalRandom random = ThreadLocalRandom.current();
 
-	public abstract void draw(GraphicsContext graphics);
+    public abstract void draw(GraphicsContext graphics);
 }
